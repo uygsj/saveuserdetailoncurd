@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<html>
+<body>
+    <input type="text" id="username" placeholder="username"><br><br>
+<input type="email" id="email" placeholder="email"><br><br>
+<input type="phone number" id="phone number" placeholder="phone number"><br><br>
+
+<input type="submit" onclick="saveToLocalStorage(event)">
+
+</body>
+    <ul id="listOfitems">
+     </ul>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        
+        function saveToLocalStorage(event) {
+            event.preventDefault();
+            var username = document.getElementById('username').value;
+            var email = document.getElementById('email').value;
+            var phone_number = document.getElementById('phone number').value;
+            
+            
+            const obj = {
+                username : username,
+                email : email,
+                phone_number : phone_number
+        }
+        axios.post("https://crudcrud.com/api/ec9c32c80e464f08bca9ce6232c539d9/appoinmentData", obj)
+        .then((response)=> {
+            showUserOnScreen(response.data)
+            //console.log(response)
+        })
+        .catch((err)=>{
+            document.body.innerHTML = document.body.innerHTML + "<h3> Something went wrong </h3>"
+            console.log(err)
+        })
+
+        
+       // localStorage.setItem(obj.email, JSON.stringify(obj))
+        //showUserOnScreen(obj)
+    }
+    
+    function showUserOnScreen(obj){
+        const parentElem = document.getElementById('listOfitems')
+        const childElem = document.createElement('li')
+        childElem.textContent = obj.username + ' - ' + obj.email + ' - ' + obj.password + ' - ' 
+        
+        const deleteButton = document.createElement('input')
+        deleteButton.type = 'button'
+        deleteButton.value = 'Delete'
+        
+        deleteButton.onclick = function() {
+            localStorage.removeItem(obj.email)
+            parentElem.removeChild(childElem)
+        }
+         
+    const editButton = document.createElement('input')
+        editButton.type = 'button'
+        editButton.value = 'Edit'
+        
+        editButton.onclick = function() {
+            localStorage.removeItem(obj.email)
+            parentElem.removeChild(childElem)
+            document.getElementById('username').value=obj.name;
+             document.getElementById('email').value=obj.email;
+            document.getElementById('phone_number').value=obj.phone_number;
+            
+        }
+         childElem.appendChild(deleteButton)
+         childElem.appendChild(editButton)
+        parentElem.appendChild(childElem)
+    }
+    </script>
+</body>
+</html>
